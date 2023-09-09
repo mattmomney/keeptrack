@@ -1,9 +1,11 @@
 import React, { SyntheticEvent, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Project } from "./Project";
-import { useSaveProject } from "./projectHooks";
+import { saveProject } from "./state/projectActions";
 
 interface ProjectFormProps {
   project: Project;
+
   onCancel: () => void;
 }
 
@@ -15,11 +17,12 @@ function ProjectForm({ project: initialProject, onCancel }: ProjectFormProps) {
     budget: "",
   });
 
-  const { mutate: saveProject, isLoading } = useSaveProject();
+  const dispatch = useDispatch();
+
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     if (!isValid()) return;
-    saveProject(project);
+    dispatch<any>(saveProject(project));
   };
 
   const handleChange = (event: any) => {
@@ -75,37 +78,45 @@ function ProjectForm({ project: initialProject, onCancel }: ProjectFormProps) {
   }
 
   return (
-    <form className="input-group vertical" onSubmit={handleSubmit}>
-      {isLoading && <span className="toast">Saving...</span>}
+    <form
+      aria-label="Edit a Project"
+      name="projectForm"
+      className="input-group vertical"
+      onSubmit={handleSubmit}
+    >
       <label htmlFor="name">Project Name</label>
       <input
         type="text"
+        id="name"
         name="name"
         placeholder="enter name"
         value={project.name}
         onChange={handleChange}
       />
       {errors.name.length > 0 && (
-        <div className="card error">
+        <div role="alert" className="card error">
           <p>{errors.name}</p>
         </div>
       )}
 
       <label htmlFor="description">Project Description</label>
       <textarea
+        id="description"
+        aria-label="project description"
         name="description"
         placeholder="enter description"
         value={project.description}
         onChange={handleChange}
       />
       {errors.description.length > 0 && (
-        <div className="card error">
+        <div role="alert" className="card error">
           <p>{errors.description}</p>
         </div>
       )}
 
       <label htmlFor="budget">Project Budget</label>
       <input
+        id="budget"
         type="number"
         name="budget"
         placeholder="enter budget"
@@ -113,7 +124,7 @@ function ProjectForm({ project: initialProject, onCancel }: ProjectFormProps) {
         onChange={handleChange}
       />
       {errors.budget.length > 0 && (
-        <div className="card error">
+        <div role="alert" className="card error">
           <p>{errors.budget}</p>
         </div>
       )}
@@ -121,6 +132,7 @@ function ProjectForm({ project: initialProject, onCancel }: ProjectFormProps) {
       <label htmlFor="isActive">Active?</label>
       <input
         type="checkbox"
+        id="isActive"
         name="isActive"
         checked={project.isActive}
         onChange={handleChange}
