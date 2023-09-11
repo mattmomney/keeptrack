@@ -1,11 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  NavLink,
-} from "react-router-dom";
+import { HashRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 
 import "./App.css";
 import HomePage from "./home/HomePage";
